@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Project;
@@ -44,7 +45,7 @@ public class ProjectController {
             statement.setDate(4, new Date(project.getUpdatedAt().getTime()));
             //EXECUTANDO A QUERY
             statement.execute();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException("Erro ao salvar o projeto"
                     + ex.getMessage(), ex);
         } finally {
@@ -79,7 +80,7 @@ public class ProjectController {
             //EXECUTANDO A QUERY
             statement.execute();
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException("Erro ao salvar o projeto"
                     + ex.getMessage(), ex);
         } finally {
@@ -122,7 +123,7 @@ public class ProjectController {
 
             }
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             throw new RuntimeException("Erro ao carregar os projetos"
                     + ex.getMessage(), ex);
         } finally {
@@ -132,5 +133,28 @@ public class ProjectController {
         return projects;
     }
 
-}
+    public void removeById(int idProject) {
 
+        String sql = " DELETE FROM projects WHERE id = ?";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            //CRIA CONEXÃO COM O BANCO DE DADOS
+            connection = ConnectionFactory.getConnection();
+            //CRIA UM PREPAREDSTATEMENT, CLASSE USADA PARA EXECUTAR A QUERY
+            statement = connection.prepareStatement(sql);
+            //SETANDO VALORES NO STATEMENT
+            statement.setInt(1, idProject);
+            //EXECUTANDO A QUERY
+            statement.execute();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro ao deletar o projeto"
+                    + ex.getMessage(), ex);
+        } finally {
+            ConnectionFactory.closeConnection(connection, statement);
+        }
+
+    }
+}

@@ -7,7 +7,6 @@ package controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -20,19 +19,19 @@ import util.ConnectionFactory;
  * @author Martarelli
  */
 public class ProjectController {
-    
-    public void save(Project project){
-        
+
+    public void save(Project project) {
+
         String sql = " INSERT INTO projects ("
                 + "name,"
                 + "description,"
                 + "createdAt,"
                 + "updatedAt) "
                 + "VALUES (?, ?, ?, ?)";
-        
+
         Connection connection = null;
         PreparedStatement statement = null;
-        
+
         try {
             //CRIA CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
@@ -46,27 +45,26 @@ public class ProjectController {
             //EXECUTANDO A QUERY
             statement.execute();
         } catch (Exception ex) {
-            throw new RuntimeException("Erro ao salvar o projeto" + 
-                    ex.getMessage(), ex);
+            throw new RuntimeException("Erro ao salvar o projeto"
+                    + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
         }
-      
-        
+
     }
-    
-    public void update(Project project){
-    
+
+    public void update(Project project) {
+
         String sql = "UPDATE projects SET "
                 + "name= ?,"
                 + "description = ?,"
                 + "createdAt = ?,"
                 + "updateAt = ? "
                 + "WHERE id = ?";
-        
+
         Connection connection = null;
         PreparedStatement statement = null;
-    
+
         try {
             //CRIA CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
@@ -80,14 +78,59 @@ public class ProjectController {
             statement.setInt(5, project.getId());
             //EXECUTANDO A QUERY
             statement.execute();
-            
+
         } catch (Exception ex) {
-            throw new RuntimeException("Erro ao salvar o projeto" + 
-                    ex.getMessage(), ex);
+            throw new RuntimeException("Erro ao salvar o projeto"
+                    + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
         }
     }
-    
-    
+
+    public List<Project> getAll() {
+
+        String sql = "SELECT * FROM projects";
+
+        List<Project> projects = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        ResultSet resultSet = null;
+
+        try {
+            //ESTABELECENDO CONEXÃO COM O BANCO DE DADOS
+            connection = ConnectionFactory.getConnection();
+            //PREPARANDO A QUERY
+            statement = connection.prepareStatement(sql);
+
+            //EXECUTANDO A QUERY
+            resultSet = statement.executeQuery();
+
+            //ENQUANTO HOUVEREM VALORES A SEREM PERCORRIDOS NO RESULTSET
+            while (resultSet.next()) {
+
+                Project project = new Project();
+
+                project.setId(resultSet.getInt("id"));
+                project.setName(resultSet.getString("name"));
+                project.setDescription(resultSet.getString("description"));
+                project.setCreatedAt(resultSet.getDate("createdAt"));
+                project.setUpdatedAt(resultSet.getDate("updatedAt"));
+
+                projects.add(project);
+
+            }
+
+        } catch (Exception ex) {
+            throw new RuntimeException("Erro ao carregar os projetos"
+                    + ex.getMessage(), ex);
+        } finally {
+            ConnectionFactory.closeConnection(connection, statement, resultSet);
+        }
+        //LISTA DE TAREFAS QUE FOI CRIADA E CARREGADA DO BANCO DE DADOS
+        return projects;
+    }
+
 }
+

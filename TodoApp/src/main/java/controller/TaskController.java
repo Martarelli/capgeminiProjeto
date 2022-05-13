@@ -37,8 +37,11 @@ public class TaskController {
         PreparedStatement statement = null;
         
         try {
+            //ESTABELECENDO CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
+            //PREPARANDO A QUERY
             statement = connection.prepareStatement(sql);
+            //SETANDO VALORES NO STATEMENT
             statement.setInt(1, task.getIdProject());
             statement.setString(2, task.getName());
             statement.setString(3, task.getDescription());
@@ -47,6 +50,7 @@ public class TaskController {
             statement.setDate(6, new Date(task.getDeadline().getTime()));
             statement.setDate(7, new Date(task.getCreatedAt().getTime()));
             statement.setDate(8, new Date(task.getUpdatedAt().getTime()));
+            //EXECUTANDO A QUERY
             statement.execute();
         } catch (Exception ex) {
             throw new RuntimeException("Erro ao salvar a tarefa" + 
@@ -74,8 +78,11 @@ public class TaskController {
         PreparedStatement statement = null;
         
         try {
+            //ESTABELECENDO CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
+            //PREPARANDO A QUERY
             statement = connection.prepareStatement(sql);
+            //SETANDO VALORES NO STATEMENT
             statement.setInt(1, task.getIdProject());
             statement.setString(2, task.getName());
             statement.setString(3, task.getDescription());
@@ -84,10 +91,12 @@ public class TaskController {
             statement.setDate(6, new Date(task.getDeadline().getTime()));
             statement.setDate(7, new Date(task.getCreatedAt().getTime()));
             statement.setDate(8, new Date(task.getUpdatedAt().getTime()));
+            statement.setInt(9, task.getId());
+            //EXECUTANDO A QUERY
             statement.execute();
             
         } catch (Exception ex) {
-            throw new RuntimeException("Erro ao salvar a tarefa" + 
+            throw new RuntimeException("Erro ao atualizar a tarefa" + 
                     ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(connection, statement);
@@ -102,9 +111,13 @@ public class TaskController {
         PreparedStatement statement = null;
         
         try {
+            //ESTABELECENDO CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
+            //PREPARANDO A QUERY
             statement = connection.prepareStatement(sql);
+            //SETANDO VALORES NO STATEMENT
             statement.setInt(1, taskId);
+            //EXECUTANDO A QUERY
             statement.execute();
         } catch (Exception ex) {
             throw new RuntimeException("Erro ao deletar a tarefa" 
@@ -123,14 +136,19 @@ public class TaskController {
         ResultSet resultSet = null;
         
         //Lista de tarefas que será devolvida quando a chamda do método acontecer
-        List<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
         
         try {
+            //ESTABELECENDO CONEXÃO COM O BANCO DE DADOS
             connection = ConnectionFactory.getConnection();
+            //PREPARANDO A QUERY
             statement = connection.prepareStatement(sql);
+            //SETANDO VALORES NO STATEMENT
             statement.setInt(1, idProject);
+            //EXECUTANDO A QUERY
             resultSet = statement.executeQuery();
             
+            //ENQUANTO HOUVEREM VALORES A SEREM PERCORRIDOS NO RESULTSET
             while(resultSet.next()){
             
                 Task task = new Task();
@@ -149,12 +167,12 @@ public class TaskController {
             }
                     
         } catch (Exception ex) {
-            throw new RuntimeException("Erro ao deletar a tarefa" 
+            throw new RuntimeException("Erro ao carregar as tarefas" 
                     + ex.getMessage(), ex);
         } finally {
             ConnectionFactory.closeConnection(connection, statement, resultSet);
         }
-        //Lista de tarefas que foi criada e carregada do banco de dados
+        //LISTA DE TAREFAS QUE FOI CRIADA E CARREGADA DO BANCO DE DADOS
         return tasks;
     }
 }

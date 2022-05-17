@@ -1,7 +1,4 @@
-package TodoApp;
-
-import java.sql.Connection;
-import util.ConnectionFactory;
+package main;
 
 /**
  *

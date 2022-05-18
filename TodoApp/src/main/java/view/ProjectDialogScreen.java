@@ -6,6 +6,7 @@
 package view;
 
 import controller.ProjectController;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import model.Project;
 
@@ -164,8 +165,11 @@ public class ProjectDialogScreen extends javax.swing.JDialog {
             controller.save(project);
 
             JOptionPane.showMessageDialog(rootPane, "Projeto salvo com sucesso");
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "Houve um erro "
+                    + "ao salvar: " + e.getMessage());
+
         }
         this.dispose();
     }//GEN-LAST:event_jLabelToolBarSaveMouseClicked

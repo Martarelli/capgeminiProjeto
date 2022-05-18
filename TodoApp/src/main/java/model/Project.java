@@ -28,9 +28,14 @@ public class Project {
     }
 
     public Project() {
-        
+        this.id = 0;
+        this.name = "";
+        this.description = "";
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
-
+    
+    
     public int getId() {
         return id;
     }

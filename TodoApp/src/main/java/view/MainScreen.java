@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import model.Project;
+import model.Task;
+import util.TaskTableModel;
 
 /**
  *
@@ -24,7 +26,8 @@ public class MainScreen extends javax.swing.JFrame {
     TaskController taskController;
     ProjectController projectController;
     
-    DefaultListModel projectModel;
+    DefaultListModel projectsModel;
+    TaskTableModel taskModel;
 
     public MainScreen() {
         initComponents();
@@ -281,6 +284,7 @@ public class MainScreen extends javax.swing.JFrame {
         jTableTasks.setGridColor(java.awt.Color.white);
         jTableTasks.setRowHeight(50);
         jTableTasks.setSelectionBackground(new java.awt.Color(204, 255, 204));
+        jTableTasks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTableTasks.setShowVerticalLines(false);
         jScrollPaneTasks.setViewportView(jTableTasks);
 
@@ -416,24 +420,35 @@ public class MainScreen extends javax.swing.JFrame {
     
     public void initDataController(){
         projectController = new ProjectController();
-        taskController = new TaskController();
+        taskController = new TaskController();        
     }
     
     public void initComponentsModel(){
-        projectModel = new DefaultListModel();
+        projectsModel = new DefaultListModel();
         loadProjects();
+        
+        taskModel = new TaskTableModel();
+        jTableTasks.setModel(taskModel);
+        loadTasks(4);
     
     }
     
     public void loadProjects(){
         List<Project> projects = projectController.getAll();
         
-        projectModel.clear();
+        projectsModel.clear();
         for (int i = 0; i < projects.size(); i++) {
            Project project = projects.get(i);
-           projectModel.addElement(project);
+           projectsModel.addElement(project);
         }
         
-        jListProjects.setModel(projectModel);
+        jListProjects.setModel(projectsModel);
+    }
+    
+    public void loadTasks(int idProject){
+        List<Task> tasks = taskController.getAll(idProject);
+        taskModel.setTasks(tasks);
+        
+    
     }
 }

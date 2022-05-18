@@ -36,7 +36,15 @@ public class Task {
     }
     
     public Task(){
+        this.id = 0;
+        this.idProject = 0;
+        this.name = "";
+        this.description = "";
+        this.notes = "";
+        this.isCompleted = false;
+        this.deadline = new Date();
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
     
     
